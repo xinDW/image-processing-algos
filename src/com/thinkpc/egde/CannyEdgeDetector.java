@@ -23,7 +23,7 @@ public class CannyEdgeDetector {
 	
 	private float pi = (float) Math.PI;
 	
-	private float thresholdLow = 0.05f, thresholdHigh = 0.1f; // two different threshold values used for "hysteresis thresholding"
+	private float thresholdLow = 0.05f, thresholdHigh = 0.2f; // two different threshold values used for "hysteresis thresholding"
 	
 	private float gradMagMax; // maximum gradient magnitude
 	public CannyEdgeDetector(ImageProcessor image) {
@@ -75,7 +75,7 @@ public class CannyEdgeDetector {
 		}
 		
 		// normalize gradient magnitude
-		gradMag.multiply(100 / gradMagMax);
+		//gradMag.multiply(255 / gradMagMax); // if normalized, two thresholds must adjust as well.
 		
 	}
 	
