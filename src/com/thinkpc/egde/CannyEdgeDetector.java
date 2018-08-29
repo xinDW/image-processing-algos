@@ -8,7 +8,7 @@ import ij.process.ImageProcessor;
 public class CannyEdgeDetector {
 	private ImageProcessor image; // source image
 	
-	private FloatProcessor gradX, gradY;
+	private FloatProcessor partialDerivativeX, partialDerivativeY;
 	private FloatProcessor gradMag;
 	private float[][] gradOrientation;  // direction of gradient, [-pi/2, pi/2]
 	
@@ -46,17 +46,17 @@ public class CannyEdgeDetector {
 		float[] filterSobelX = {-1,0,1,-2,0,2,-1,0,1};
 		float[] filterSobelY = {-1,-2,-1,0,0,0,1,2,1};
 		
-		gradX = (this.image instanceof FloatProcessor) ?
+		partialDerivativeX = (this.image instanceof FloatProcessor) ?
 				(FloatProcessor) this.image.duplicate() :
 				this.image.convertToFloatProcessor();
 				
-		new GaussianBlur().blurGaussian(gradX, this.sigma);	
-		gradY = (FloatProcessor) gradX.duplicate();
+		new GaussianBlur().blurGaussian(partialDerivativeX, this.sigma);	
+		partialDerivativeY = (FloatProcessor) partialDerivativeX.duplicate();
 		
 		Convolver convolver = new Convolver();
 		convolver.setNormalize(false);
-		convolver.convolve(gradX, filterSobelX, 3, 3);
-		convolver.convolve(gradY, filterSobelY, 3, 3);
+		convolver.convolve(partialDerivativeX, filterSobelX, 3, 3);
+		convolver.convolve(partialDerivativeY, filterSobelY, 3, 3);
 		
 		// calculate magnitude and orientation of gradients
 		gradMag = new FloatProcessor(width, height);
@@ -64,8 +64,8 @@ public class CannyEdgeDetector {
 		
 		for (int h = 0; h < height; h++) {
 			for (int w = 0; w < width; w++) {
-				float dx = gradX.getf(w, h);
-				float dy = gradY.getf(w, h);
+				float dx = partialDerivativeX.getf(w, h);
+				float dy = partialDerivativeY.getf(w, h);
 				float mag = (float) Math.sqrt(dx * dx + dy * dy);
 				gradOrientation[w][h] = (float) Math.atan(dy / dx);
 				gradMag.setf(w, h, mag);
