@@ -1,5 +1,7 @@
 package com.thinkpc.egde;
 
+import java.util.Vector;
+
 import ij.plugin.filter.Convolver;
 import ij.plugin.filter.GaussianBlur;
 import ij.process.FloatProcessor;
@@ -162,6 +164,11 @@ public class CannyEdgeDetector {
 		detectAndThreshold();
 	}
 	
+	public void setParameters(float sigma, float thresHigh, float thresLow) {
+		this.sigma = sigma;
+		this.thresholdHigh = thresHigh;
+		this.thresholdLow = thresLow;
+	}
 	public ImageProcessor getGradMag() { return this.gradMag; }
 	
 	public float[][] getGradMagAfterNonMaxSuppression() { return this.gradMagNonMaxSup; }
